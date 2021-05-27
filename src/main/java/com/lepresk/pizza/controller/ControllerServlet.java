@@ -51,23 +51,27 @@ public class ControllerServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String action = request.getServletPath();
-
+        //String action = request.getServletPath();
+        String action = request.getParameter("action");
+        if(action == null) {
+            action = "";
+        }
+        
         try {
             switch (action) {
-                case "/new":
+                case "new":
                     showNewForm(request, response);
                     break;
-                case "/insert":
+                case "insert":
                     insertBook(request, response);
                     break;
-                case "/delete":
+                case "delete":
                     deleteBook(request, response);
                     break;
-                case "/edit":
+                case "edit":
                     showEditForm(request, response);
                     break;
-                case "/update":
+                case "update":
                     updateBook(request, response);
                     break;
                 default:
@@ -99,7 +103,6 @@ public class ControllerServlet extends HttpServlet {
         RequestDispatcher dispatcher = request.getRequestDispatcher("BookForm.jsp");
         request.setAttribute("book", existingBook);
         dispatcher.forward(request, response);
-
     }
 
     private void insertBook(HttpServletRequest request, HttpServletResponse response)
@@ -113,22 +116,27 @@ public class ControllerServlet extends HttpServlet {
         uploadFile(request, newBook);
         
         bookDAO.insertBook(newBook);
-        response.sendRedirect("list");
+        response.sendRedirect("admin");
     }
 
     private void updateBook(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
         int id = Integer.parseInt(request.getParameter("id"));
+        
+        Book book = bookDAO.getBook(id);
+        
         String title = request.getParameter("title");
         String author = request.getParameter("author");
         float price = Float.parseFloat(request.getParameter("price"));
 
-        Book book = new Book(id, title, author, price);
+        book.setTitle(title);
+        book.setAuthor(author);
+        book.setPrice(price);
         
         uploadFile(request, book);
         
         bookDAO.updateBook(book);
-        response.sendRedirect("list");
+        response.sendRedirect("admin");
     }
 
     private void deleteBook(HttpServletRequest request, HttpServletResponse response)
@@ -141,15 +149,17 @@ public class ControllerServlet extends HttpServlet {
     }
 
     private void uploadFile(HttpServletRequest request, Book book) throws IOException, ServletException {
-        String uploadPath = getServletContext().getRealPath("") + File.separator + UPLOAD_DIRECTORY;
+        String uploadPath = getServletContext().getRealPath("") + File.separator + "ressources" + File.separator + UPLOAD_DIRECTORY;
         File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) {
-            uploadDir.mkdir();
+            uploadDir.mkdirs();
         }
 
         Part part = request.getPart("photo");
         String fileName = part.getSubmittedFileName();
-        
+        if(fileName.trim().isEmpty()) {
+            return;
+        } 
         String fullPath = uploadPath + File.separator + fileName;
         part.write(fullPath);
 

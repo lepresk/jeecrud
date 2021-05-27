@@ -4,7 +4,7 @@
     <head>
         <title>Books Store Application</title>
         <!-- CSS only -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+        <link href="${pageContext.request.contextPath}/ressources/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -16,10 +16,10 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="${pageContext.request.contextPath}/admin/">Liste des plats</a>
+                            <a class="nav-link active" aria-current="page" href="${pageContext.request.contextPath}/admin">Liste des plats</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="${pageContext.request.contextPath}/admin/new">Nouveau</a>
+                            <a class="nav-link" href="${pageContext.request.contextPath}/admin?action=new">Nouveau</a>
                         </li>
                     </ul>
                 </div>
@@ -35,15 +35,15 @@
             </div>
 
             <div class="row">
-                <div class="col-lg-8 mx-auto">
+                <div class="col-lg-12 mx-auto">
                     <table class="table table-bordered">
                         <thead>
                             <tr>
                                 <th>ID</th>
                                 <th>Image</th>
-                                <th>Title</th>
-                                <th>Author</th>
-                                <th>Price</th>
+                                <th>Titre</th>
+                                <th>Ingredients</th>
+                                <th>Prix</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -51,13 +51,13 @@
                             <c:forEach var="book" items="${listBook}">
                                 <tr>
                                     <td><c:out value="${book.id}" /></td>
-                                    <td><img style="max-width: 90px; height: auto; object-fit: cover;" src='${pageContext.request.contextPath}/images/<c:url value="${book.image}"></c:url>' />   </td>
+                                    <td><img style="max-height: 50px; width: auto; object-fit: cover;" src='${pageContext.request.contextPath}/ressources/images/<c:url value="${book.image}"></c:url>' />   </td>
                                     <td><c:out value="${book.title}" /></td>
                                     <td><c:out value="${book.author}" /></td>
-                                    <td><c:out value="${book.price}" /></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-light" href="${pageContext.request.contextPath}/admin/edit?id=<c:out value='${book.id}' />">Editer</a>
-                                        <a class="btn btn-sm btn-danger" href="${pageContext.request.contextPath}/admin/delete?id=<c:out value='${book.id}' />">Supprimer</a>                     
+                                    <td><c:out value="${book.formattedPrice}" /></td>
+                                    <td class="text-end">
+                                        <a class="btn btn-sm btn-primary" href="${pageContext.request.contextPath}/admin?action=edit&id=<c:out value='${book.id}' />">Editer</a>
+                                        <a class="btn btn-sm btn-danger" href="${pageContext.request.contextPath}/admin?action=delete&id=<c:out value='${book.id}' />">Supprimer</a>                     
                                     </td>
                                 </tr>
                             </c:forEach>

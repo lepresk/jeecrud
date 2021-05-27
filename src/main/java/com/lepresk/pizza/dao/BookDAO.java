@@ -49,7 +49,7 @@ public class BookDAO {
     }
      
     public boolean insertBook(Book book) throws SQLException {
-        String sql = "INSERT INTO book (title, author, price) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO book (title, ingredients, price, image_name, image_path) VALUES (?, ?, ?, ?, ?)";
         connect();
          
         PreparedStatement statement = jdbcConnection.prepareStatement(sql);
@@ -78,7 +78,7 @@ public class BookDAO {
         while (resultSet.next()) {
             int id = resultSet.getInt("book_id");
             String title = resultSet.getString("title");
-            String author = resultSet.getString("author");
+            String author = resultSet.getString("ingredients");
             float price = resultSet.getFloat("price");
             String image = resultSet.getString("image_name");
             String imagePath = resultSet.getString("image_path");
@@ -110,7 +110,7 @@ public class BookDAO {
     }
      
     public boolean updateBook(Book book) throws SQLException {
-        String sql = "UPDATE book SET title = ?, author = ?, price = ?, image_name = ?, image_path = ?";
+        String sql = "UPDATE book SET title = ?, ingredients = ?, price = ?, image_name = ?, image_path = ?";
         sql += " WHERE book_id = ?";
         connect();
          
@@ -141,7 +141,7 @@ public class BookDAO {
          
         if (resultSet.next()) {
             String title = resultSet.getString("title");
-            String author = resultSet.getString("author");
+            String author = resultSet.getString("ingredients");
             float price = resultSet.getFloat("price");
             
             String image = resultSet.getString("image_name");

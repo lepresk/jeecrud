@@ -5,6 +5,9 @@
  */
 package com.lepresk.pizza.model;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 /**
  *
  * @author Dev
@@ -16,6 +19,7 @@ public class Book {
     protected float price;
     protected String image;
     protected String path;
+    protected String formattedPrice;
  
     public Book() {
     }
@@ -38,12 +42,11 @@ public class Book {
         this.title = title;
         this.author = author;
         this.price = price;
+        this.formattedPrice = NumberFormat.getInstance(Locale.FRENCH).format(price) + " FCFA";
     }
     
     public Book(String title, String author, float price, String imageName, String imagePath) {
-        this.title = title;
-        this.author = author;
-        this.price = price;
+        this(title, author, price);
         this.image = imageName;
         this.path = imagePath;
     }
@@ -95,4 +98,9 @@ public class Book {
     public void setPath(String path) {
         this.path = path;
     }
+
+    public String getFormattedPrice() {
+        return formattedPrice;
+    }
+   
 }
