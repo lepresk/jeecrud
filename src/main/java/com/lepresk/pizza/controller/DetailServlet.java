@@ -6,8 +6,11 @@
 package com.lepresk.pizza.controller;
 
 import com.lepresk.pizza.dao.BookDAO;
+import com.lepresk.pizza.dao.OrderDAO;
 import com.lepresk.pizza.model.Book;
+import com.lepresk.pizza.model.Order;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
@@ -21,10 +24,10 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Dev
  */
-@WebServlet("/home")
-public class HomeServlet extends HttpServlet {
+@WebServlet("/detail")
+public class DetailServlet extends HttpServlet {
 
-    private BookDAO bookDAO;
+    private OrderDAO orderDAO;
 
     @Override
     public void init() {
@@ -32,7 +35,7 @@ public class HomeServlet extends HttpServlet {
         String jdbcUsername = getServletContext().getInitParameter("jdbcUsername");
         String jdbcPassword = getServletContext().getInitParameter("jdbcPassword");
 
-        bookDAO = new BookDAO(jdbcURL, jdbcUsername, jdbcPassword);
+        orderDAO = new OrderDAO(jdbcURL, jdbcUsername, jdbcPassword);
     }
 
     /**
@@ -45,10 +48,51 @@ public class HomeServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String action = request.getParameter("action");
+        if (action == null || action.isBlank()) {
+            action = "";
+        }
+
         try {
-            List<Book> listBook = bookDAO.listAllBooks();
-            request.setAttribute("listBook", listBook);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("home.jsp");
+            switch (action) {
+                case "save_order":
+                    saveOrder(request, response);
+                    break;
+                default:
+                    showDetailPage(request, response);
+
+            }
+        } catch (SQLException e) {
+            throw new ServletException(e);
+        }
+    }
+
+    private void saveOrder(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+        String name = request.getParameter("name");
+        String email = request.getParameter("email");
+        String address = request.getParameter("address");
+        String phone = request.getParameter("phone");
+        int deliveryOption = Integer.parseInt(request.getParameter("delivery_option"));
+        int qty = Integer.parseInt(request.getParameter("qty"));
+        int menuId = Integer.parseInt(request.getParameter("menu_id"));
+
+        Order order = new Order(name, email, phone, address, deliveryOption, qty, menuId);
+
+        orderDAO.insertOrder(order);
+        
+        response.sendRedirect("success.jsp");
+    }
+
+    private void showDetailPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String id = request.getParameter("id");
+        if (id == null || id.isBlank()) {
+            throw new ServletException("Id du menu invalide");
+        }
+
+        try {
+            Book book = orderDAO.getBook(Integer.parseInt(id));
+            request.setAttribute("book", book);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("detail.jsp");
             dispatcher.forward(request, response);
         } catch (SQLException ex) {
             throw new ServletException(ex);

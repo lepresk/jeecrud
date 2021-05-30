@@ -8,7 +8,7 @@
     <body>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
             <div class="container">
-                <a class="navbar-brand" href="#">Gestion des plats</a>
+                <a class="navbar-brand" href="${pageContext.request.contextPath}/admin">Gestion des plats</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -21,6 +21,14 @@
                             <a class="nav-link" href="${pageContext.request.contextPath}/admin?action=new">Nouveau</a>
                         </li>
                     </ul>
+
+                    <div class="navbar-nav flex-row flex-wrap ms-md-auto">
+                        <li class="nav-item col-6 col-md-auto">
+                            <a class="nav-link p-2" href="${pageContext.request.contextPath}/admin?action=logout">
+                                Logout
+                            </a>
+                        </li>
+                    </div>
                 </div>
             </div>
         </nav>

@@ -42,7 +42,7 @@ public class Book {
         this.title = title;
         this.author = author;
         this.price = price;
-        this.formattedPrice = NumberFormat.getInstance(Locale.FRENCH).format(price) + " FCFA";
+        this.formattedPrice = NumberFormat.getInstance(Locale.FRENCH).format(price) + " $";
     }
     
     public Book(String title, String author, float price, String imageName, String imagePath) {

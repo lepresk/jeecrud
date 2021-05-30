@@ -53,11 +53,18 @@ public class ControllerServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //String action = request.getServletPath();
         String action = request.getParameter("action");
-        if(action == null) {
+        if (action == null) {
             action = "";
         }
-        
+
         try {
+            String name = (String) request.getSession().getAttribute("name");
+
+            if (!action.equals("login") && (name == null || name.isBlank())) {
+                showLogin(request, response);
+                return;
+            }
+
             switch (action) {
                 case "new":
                     showNewForm(request, response);
@@ -74,6 +81,12 @@ public class ControllerServlet extends HttpServlet {
                 case "update":
                     updateBook(request, response);
                     break;
+                case "login":
+                    handleLogin(request, response);
+                    break;
+                case "logout":
+                    handleLogout(request, response);
+                    break;
                 default:
                     listBook(request, response);
                     break;
@@ -82,7 +95,29 @@ public class ControllerServlet extends HttpServlet {
             throw new ServletException(ex);
         }
     }
+    
+    private void showLogin(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
+        RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+        dispatcher.forward(request, response);
+    }
 
+    private void handleLogin(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        
+        if(username.equals("Admin") && password.equals("1234")) {
+            request.getSession().setAttribute("name", "Administrator");
+            response.sendRedirect("admin");
+        } else {
+            response.sendRedirect("login.jsp");
+        }
+    }
+    
+     private void handleLogout(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        request.getSession().removeAttribute("name");
+        response.sendRedirect("login.jsp");
+    }
+    
     private void listBook(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
         List<Book> listBook = bookDAO.listAllBooks();
         request.setAttribute("listBook", listBook);
@@ -112,9 +147,9 @@ public class ControllerServlet extends HttpServlet {
         float price = Float.parseFloat(request.getParameter("price"));
 
         Book newBook = new Book(title, author, price);
-        
+
         uploadFile(request, newBook);
-        
+
         bookDAO.insertBook(newBook);
         response.sendRedirect("admin");
     }
@@ -122,9 +157,9 @@ public class ControllerServlet extends HttpServlet {
     private void updateBook(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
         int id = Integer.parseInt(request.getParameter("id"));
-        
+
         Book book = bookDAO.getBook(id);
-        
+
         String title = request.getParameter("title");
         String author = request.getParameter("author");
         float price = Float.parseFloat(request.getParameter("price"));
@@ -132,9 +167,9 @@ public class ControllerServlet extends HttpServlet {
         book.setTitle(title);
         book.setAuthor(author);
         book.setPrice(price);
-        
+
         uploadFile(request, book);
-        
+
         bookDAO.updateBook(book);
         response.sendRedirect("admin");
     }
@@ -145,7 +180,7 @@ public class ControllerServlet extends HttpServlet {
 
         Book book = new Book(id);
         bookDAO.deleteBook(book);
-        response.sendRedirect("list");
+        response.sendRedirect("admin");
     }
 
     private void uploadFile(HttpServletRequest request, Book book) throws IOException, ServletException {
@@ -157,9 +192,9 @@ public class ControllerServlet extends HttpServlet {
 
         Part part = request.getPart("photo");
         String fileName = part.getSubmittedFileName();
-        if(fileName.trim().isEmpty()) {
+        if (fileName.trim().isEmpty()) {
             return;
-        } 
+        }
         String fullPath = uploadPath + File.separator + fileName;
         part.write(fullPath);
 
