@@ -5,6 +5,7 @@
         <title>Books Store Application</title>
         <!-- CSS only -->
         <link href="${pageContext.request.contextPath}/ressources/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+        <title>Order history</title>
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -19,7 +20,7 @@
                             <a class="nav-link active" aria-current="page" href="${pageContext.request.contextPath}/admin">Liste des plats</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="${pageContext.request.contextPath}/admin?action=order">Orders</a>
+                            <a class="nav-link active" aria-current="page" href="${pageContext.request.contextPath}/admin?action=order">Orders</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="${pageContext.request.contextPath}/admin?action=new">Nouveau</a>
@@ -41,7 +42,7 @@
             <div class="px-4 py-5 text-center">
                 <h1 class="display-5 fw-bold">Bienvenu au back-office</h1>
                 <div class="col-lg-6 mx-auto">
-                    <p class="lead mb-4">Gérer les menus disponible sur le site</p>
+                    <p class="lead mb-4">Gérer les commandes disponible sur le site</p>
                 </div>
             </div>
 
@@ -50,26 +51,27 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th>ID</th>
                                 <th>Image</th>
                                 <th>Titre</th>
-                                <th>Ingredients</th>
-                                <th>Prix</th>
-                                <th>Actions</th>
+                                <th>Qty</th>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Delivery option</th>
+                                <th>Unit price</th>
+                                <th>Total</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <c:forEach var="book" items="${listBook}">
+                            <c:forEach var="order" items="${listOrders}">
                                 <tr>
-                                    <td><c:out value="${book.id}" /></td>
-                                    <td><img style="max-height: 50px; width: auto; object-fit: cover;" src='${pageContext.request.contextPath}/ressources/images/<c:url value="${book.image}"></c:url>' />   </td>
-                                    <td><c:out value="${book.title}" /></td>
-                                    <td><c:out value="${book.author}" /></td>
-                                    <td><c:out value="${book.formattedPrice}" /></td>
-                                    <td class="text-end">
-                                        <a class="btn btn-sm btn-primary" href="${pageContext.request.contextPath}/admin?action=edit&id=<c:out value='${book.id}' />">Editer</a>
-                                        <a class="btn btn-sm btn-danger" href="${pageContext.request.contextPath}/admin?action=delete&id=<c:out value='${book.id}' />">Supprimer</a>                     
-                                    </td>
+                                    <td><img style="max-height: 50px; width: auto; object-fit: cover;" src='${pageContext.request.contextPath}/ressources/images/<c:url value="${order.menuImageName}"></c:url>' />   </td>
+                                    <td><c:out value="${order.menuName}" /></td>
+                                    <td><c:out value="${order.qty}" /></td>
+                                    <td><c:out value="${order.name}" /></td>
+                                    <td><c:out value="${order.phone}" /></td>
+                                    <td><c:out value="${order.deliveryOptionName}" /></td>
+                                    <td><c:out value="${order.menuPrice}" /></td>
+                                    <td><c:out value="${order.total}" /></td>
                                 </tr>
                             </c:forEach>
                         </tbody>

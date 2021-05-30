@@ -25,6 +25,10 @@ public class Order {
     protected int qty;
     protected int menuId;
     protected Date orderDate;
+    
+    protected String menuName;
+    protected float menuPrice;
+    protected String menuImageName;
 
     public Order() {
     }
@@ -46,8 +50,6 @@ public class Order {
         this.orderDate = new Date(System.currentTimeMillis());
     }
 
-    
-    
     public int getId() {
         return id;
     }
@@ -119,4 +121,37 @@ public class Order {
     public void setOrderDate(Date orderDate) {
         this.orderDate = orderDate;
     }
+
+    public String getMenuName() {
+        return menuName;
+    }
+
+    public void setMenuName(String menuName) {
+        this.menuName = menuName;
+    }
+
+    public float getMenuPrice() {
+        return menuPrice;
+    }
+
+    public void setMenuPrice(float menuPrice) {
+        this.menuPrice = menuPrice;
+    }
+
+    public String getMenuImageName() {
+        return menuImageName;
+    }
+
+    public void setMenuImageName(String menuImageName) {
+        this.menuImageName = menuImageName;
+    }
+
+    public float getTotal() {
+        return menuPrice * qty;
+    }
+    
+    public String getDeliveryOptionName() {
+        return deliveryOption == DELIVERY_DOMICILE ? "Livraison à domicile" : "En boutique";
+    }
+    
 }

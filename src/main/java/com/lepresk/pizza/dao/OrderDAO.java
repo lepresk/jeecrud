@@ -74,7 +74,7 @@ public class OrderDAO {
     public List<Order> listAllOrders() throws SQLException {
         List<Order> listOrders = new ArrayList<>();
 
-        String sql = "SELECT * FROM orders";
+        String sql = "SELECT o.*, b.title as menu_name, b.price as menu_price, b.image_name as menu_image FROM orders o INNER JOIN book b ON o.menu_id = b.book_id";
 
         connect();
 
@@ -91,9 +91,16 @@ public class OrderDAO {
             int qty = resultSet.getInt("qty");
             int menuId = resultSet.getInt("menu_id");
             Date orderDate = resultSet.getDate("order_date");
-          
+
+            String menuName = resultSet.getString("menu_name");
+            float menuPrice = resultSet.getFloat("menu_price");
+            String menuImage = resultSet.getString("menu_image");
+
             Order order = new Order(id, name, email, phone, address, deliveryOption, qty, menuId, orderDate);
-            
+            order.setMenuName(menuName);
+            order.setMenuPrice(menuPrice);
+            order.setMenuImageName(menuImage);
+
             listOrders.add(order);
         }
 

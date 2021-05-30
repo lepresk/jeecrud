@@ -18,6 +18,9 @@
                             <a class="nav-link active" aria-current="page" href="${pageContext.request.contextPath}/admin">Liste des plats</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="${pageContext.request.contextPath}/admin?action=order">Orders</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="${pageContext.request.contextPath}/admin?action=new">Nouveau</a>
                         </li>
                     </ul>
